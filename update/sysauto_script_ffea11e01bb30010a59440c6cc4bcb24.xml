@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sysauto_script">
+    <sysauto_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition/>
+        <conditional>false</conditional>
+        <name>Find and Close Long Overdue NeedIt Tasks</name>
+        <run_as display_value="System Administrator">6816f79cc0a8016401c5a33be04be441</run_as>
+        <run_as_tz/>
+        <run_dayofmonth>1</run_dayofmonth>
+        <run_dayofweek>1</run_dayofweek>
+        <run_period/>
+        <run_start>2020-03-23 16:48:11</run_start>
+        <run_time>1970-01-01 08:05:00</run_time>
+        <run_type>daily</run_type>
+        <script><![CDATA[try {
+	var howLongToClose = gs.getProperty('x_58872_needit.autoCloseOverdue');
+
+	var toClose = new GlideRecord('x_58872_needit_needit_task');
+	toClose.addQuery('due_date', '<=', gs.daysAgo(howLongToClose));
+	toClose.addQuery('state', '<', 3);
+
+	toClose.query();
+	
+	while(toClose.next()) {
+		gs.info('Auto close NeedIt Task ' + toClose.number);
+		toClose.work_notes = 'Record closed because it was too far past the due date.';
+		toClose.state = 4;
+		toClose.update();
+	}
+}
+catch(e) {
+	gs.info('Find and Close Long Overdue NeedIt Tasks failed with message: ' + e.message);
+}]]></script>
+        <sys_class_name>sysauto_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-03-23 16:50:52</sys_created_on>
+        <sys_id>ffea11e01bb30010a59440c6cc4bcb24</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_name>Find and Close Long Overdue NeedIt Tasks</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sysauto_script_ffea11e01bb30010a59440c6cc4bcb24</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-03-23 17:01:39</sys_updated_on>
+        <upgrade_safe>false</upgrade_safe>
+    </sysauto_script>
+</record_update>
